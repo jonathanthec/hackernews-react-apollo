@@ -1,7 +1,22 @@
-function feed(root, args, context, info){
-    return context.prisma.links()
+function info() {
+    return 'Welcome to this API'
+}
+
+async function feed(root, args, context, info){
+    const where = args.filter ? {
+        OR: [
+            { description_contains: args.filter },
+            { url_contains: args.filter }
+        ],
+    } : {}
+
+    const links = await context.prisma.links({
+        where
+    })
+    return links;
 }
 
 module.exports = {
-    feed
+    feed,
+    info
 }
